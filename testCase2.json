@@ -1,0 +1,24 @@
+{
+    "transactions": [
+        {
+            "description": "Netflix",
+            "amount": -20.00,
+            "date": "2021-10-15"
+        },
+        {
+            "description": "Netflix",
+            "amount": -20.00,
+            "date": "2021-09-15"
+        },
+        {
+            "description": "Spotify",
+            "amount": -14.99,
+            "date": "2021-10-29"
+        },
+        {
+            "description": "Spotify",
+            "amount": -14.99,
+            "date": "2021-09-29"
+        }
+    ]
+}

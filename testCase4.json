@@ -1,0 +1,24 @@
+{
+    "transactions": [
+        {
+            "description": "Groceries",
+            "amount": -50.00,
+            "date": "2021-10-01"
+        },
+        {
+            "description": "Groceries",
+            "amount": -48.00,
+            "date": "2021-09-15"
+        },
+        {
+            "description": "Groceries",
+            "amount": -55.00,
+            "date": "2021-08-20"
+        },
+        {
+            "description": "Gas Station",
+            "amount": -40.00,
+            "date": "2021-09-15"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "transactions": [
+        {
+            "description": "Groceries",
+            "amount": -50.00,
+            "date": "2021-10-01"
+        }
+    ]
+}
