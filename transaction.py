@@ -45,44 +45,55 @@ def identify_recurring_transactions(transactions):
     return recurring_transactions
 
 
-# Read transaction data from a JSON file
-with open("example.json", "r") as file:
-    data = json.load(file)
+def is_valid_transaction(transaction):
+    # Check if the transaction dictionary contains all necessary keys
+    required_keys = ['description', 'amount', 'date']
+    return all(key in transaction for key in required_keys)
 
-# Assuming data is in the format of your provided JSON
-json_transactions = data["transactions"]
+def load_transactions_from_json(file_path):
+    with open(file_path, "r") as file:
+        data = json.load(file)
+        json_transactions = data.get("transactions", [])
+        return [Transaction(**transaction) for transaction in json_transactions if is_valid_transaction(transaction)]
 
-# Convert JSON transactions to Transaction objects
-transactions = [Transaction(**transaction)
-                    for transaction in json_transactions]
+def main():
+    file_path = "example.json"
+    transactions = load_transactions_from_json(file_path)
 
-# Identify recurring transactions
-result = identify_recurring_transactions(transactions)
+    if not transactions:
+        print("No valid transactions found.")
+        return
+    result = identify_recurring_transactions(transactions)
 
-recurring_transactions_list = []
+    recurring_transactions_list = []
 
-for key, dates in result.items():
-    description, amount = key.split('_')
-    amount = float(amount)
+    for key, dates in result.items():
+        description, amount = key.split('_')
+        amount = float(amount)
 
-    # Calculate the approximate date for the next month's transaction
-    last_date = max(dates, key=lambda x: datetime.strptime(x, '%Y-%m-%d'))
-    last_date = datetime.strptime(last_date, '%Y-%m-%d')
-    next_date = last_date + timedelta(days=30)  # Assuming a month is approximately 30 days
+        # Calculated the approximate date for the next month's transaction
+        last_date = max(dates, key=lambda x: datetime.strptime(x, '%Y-%m-%d'))
+        last_date = datetime.strptime(last_date, '%Y-%m-%d')
+        # Assuming a month is approximately 30 days
+        next_date = last_date + timedelta(days=30)  
 
-    # Create a dictionary for the recurring transaction
-    recurring_transaction = {
-        'name': description,
-        'amount': amount,  
-        'pastTransactions': [date for date in sorted(dates, reverse=True)],
-        'nextTransactionDate': next_date.strftime('%Y-%m-%d'),
-    }
+        # Created a dictionary for the recurring transaction
+        recurring_transaction = {
+            'name': description,
+            'amount': amount,  
+            'pastTransactions': [date for date in sorted(dates, reverse=True)],
+            'nextTransactionDate': next_date.strftime('%Y-%m-%d'),
+        }
 
-    # Append the dictionary to the list
-    recurring_transactions_list.append(recurring_transaction)
+        # Append the dictionary to the list
+        recurring_transactions_list.append(recurring_transaction)
 
-# Create a dictionary with the list of recurring transactions
-result_json = {'RecurringTransactions': recurring_transactions_list}
+    # Created dictionary with the list of recurring transactions
+    result_json = {'RecurringTransactions': recurring_transactions_list}
 
-# Print the result in JSON format
-print(json.dumps(result_json, indent=2))
+
+    print(json.dumps(result_json, indent=2))
+
+
+if __name__ == "__main__":
+    main()
