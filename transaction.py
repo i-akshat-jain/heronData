@@ -22,8 +22,6 @@ def calculate_similarity(str1, str2):
     return SequenceMatcher(None, str1, str2).ratio()
 
 # Function to identify recurring transactions
-
-
 def identify_recurring_transactions(transactions):
     recurring_transactions = {}
 
@@ -61,11 +59,8 @@ transactions = [Transaction(**transaction)
 # Identify recurring transactions
 result = identify_recurring_transactions(transactions)
 
-# Print the result
-for key, dates in result.items():
-    print(f"Recurring Transaction: {key}, Dates: {', '.join(dates)}")
+recurring_transactions_list = []
 
-print("*____________________________________________________________________________________________*")
 for key, dates in result.items():
     description, amount = key.split('_')
     amount = float(amount)
@@ -75,5 +70,19 @@ for key, dates in result.items():
     last_date = datetime.strptime(last_date, '%Y-%m-%d')
     next_date = last_date + timedelta(days=30)  # Assuming a month is approximately 30 days
 
-    # Print the result
-    print(f"Recurring Transaction: {description}_{amount}, Last Date: {last_date.strftime('%Y-%m-%d')}, Next Approximate Date: {next_date.strftime('%Y-%m-%d')}")
+    # Create a dictionary for the recurring transaction
+    recurring_transaction = {
+        'name': description,
+        'amount': amount,  
+        'pastTransactions': [date for date in sorted(dates, reverse=True)],
+        'nextTransactionDate': next_date.strftime('%Y-%m-%d'),
+    }
+
+    # Append the dictionary to the list
+    recurring_transactions_list.append(recurring_transaction)
+
+# Create a dictionary with the list of recurring transactions
+result_json = {'RecurringTransactions': recurring_transactions_list}
+
+# Print the result in JSON format
+print(json.dumps(result_json, indent=2))
